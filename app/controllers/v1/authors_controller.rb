@@ -1,9 +1,13 @@
 module V1
   class AuthorsController < ApplicationController
     def create
-      authors = AuthorCreator.new(authors_params).create
+      authors = Authors::Create::Do.new.({ name: authors_params[:name] })
 
-      render json: authors
+      if authors.success?
+        render json: authors.success
+      else
+        render json: authors.failure
+      end
     end
 
     private

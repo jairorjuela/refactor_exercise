@@ -1,9 +1,13 @@
 module V1
   class BooksController < ApplicationController
     def create
-      books = BookCreator.new(books_params).create
+      books = Books::Create::Do.new.({ title: books_params[:title], description: books_params[:description], author_id: books_params[:author_id] })
 
-      render json: books
+      if books.success?
+        render json: books.success
+      else
+        render json: books.failure
+      end
     end
 
     private
